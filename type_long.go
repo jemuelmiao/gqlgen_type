@@ -43,33 +43,23 @@ package gqlgen_type
 //	return value, nil
 //}
 
-
 import (
 	"fmt"
 	"io"
-	"strings"
 )
 
-type Banned bool
+type Long int64
 
-func (b Banned) MarshalGQL(w io.Writer) {
-	if b {
-		w.Write([]byte("true"))
-	} else {
-		w.Write([]byte("false"))
-	}
+func (l Long) MarshalGQL(w io.Writer) {
+	w.Write([]byte(fmt.Sprintf("%v", l)))
 }
 
-func (b *Banned) UnmarshalGQL(v interface{}) error {
-	switch v := v.(type) {
-	case string:
-		*b = strings.ToLower(v) == "true"
-		return nil
-	case bool:
-		*b = Banned(v)
-		return nil
-	default:
-		return fmt.Errorf("%T is not a bool", v)
+func (l *Long) UnmarshalGQL(v interface{}) error {
+	value, ok := v.(int64)
+	if !ok {
+		return fmt.Errorf("Long must be int64")
 	}
+	*l = Long(value)
+	return nil
 }
 
