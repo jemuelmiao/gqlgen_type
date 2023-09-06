@@ -1,18 +1,24 @@
 package gqlgen_type
 
 import (
-	"github.com/99designs/gqlgen/graphql"
+	"fmt"
+	"io"
 )
 
 type CustomLong int64
 
-func MarshalCustomLong(i CustomLong) graphql.Marshaler {
-	return graphql.MarshalInt64(int64(i))
+// UnmarshalGQL implements the graphql.Unmarshaler interface
+func (c *CustomLong) UnmarshalGQL(v interface{}) error {
+	value, ok := v.(int64)
+	if !ok {
+		return fmt.Errorf("CustomLong must be int64")
+	}
+	*c = CustomLong(value)
+	return nil
 }
 
-func UnmarshalCustomLong(v interface{}) (CustomLong, error) {
-	if value, ok := v.(int64); ok {
-		return CustomLong(value), nil
-	}
-	return 0, fmt.Errorf("could not unmarshal CustomLong")
+// MarshalGQL implements the graphql.Marshaler interface
+func (c *CustomLong) MarshalGQL(w io.Writer) {
+	w.Write([]byte(fmt.Sprintf("%v", int64(*c))))
 }
+
