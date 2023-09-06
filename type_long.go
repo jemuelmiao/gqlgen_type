@@ -18,7 +18,7 @@ func (c *CustomLong) UnmarshalGQL(v interface{}) error {
 }
 
 // MarshalGQL implements the graphql.Marshaler interface
-func (c *CustomLong) MarshalGQL(w io.Writer) {
-	w.Write([]byte(fmt.Sprintf("%v", int64(*c))))
+func (c CustomLong) MarshalGQL(w io.Writer) {
+	w.Write([]byte(fmt.Sprintf("%v", int64(c))))
 }
 
