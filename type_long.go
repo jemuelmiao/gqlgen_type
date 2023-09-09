@@ -19,4 +19,3 @@ func (l *Long) UnmarshalGQL(v interface{}) error {
 	*l = Long(value)
 	return nil
 }
-
